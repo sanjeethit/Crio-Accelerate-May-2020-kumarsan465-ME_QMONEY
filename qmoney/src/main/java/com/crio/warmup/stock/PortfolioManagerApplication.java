@@ -23,6 +23,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.web.client.RestClientException;
@@ -49,11 +50,9 @@ public class PortfolioManagerApplication {
     File file = resolveFileFromResources(args[0]);
     ObjectMapper mapper = getObjectMapper();
     PortfolioTrade[] symbol = mapper.readValue(file, PortfolioTrade[].class);
-    ArrayList<String> al = new ArrayList<>();
-    for (int i = 0; i < symbol.length;i++) {
-      al.add(symbol[i].getSymbol());
-    }
-    return al;
+    return Arrays.asList(symbol)
+      .stream().map(i -> i.getSymbol())
+      .collect(Collectors.toList());
   }
 
   public static List<String> mainReadQuotes(String[] args) throws IOException,
@@ -110,7 +109,7 @@ public class PortfolioManagerApplication {
     ThreadContext.put("runId", UUID.randomUUID().toString());
 
     printJsonObject(mainReadFile(args));
-    printJsonObject(mainReadQuotes(args));
+    //printJsonObject(mainReadQuotes(args));
 
 
   }
