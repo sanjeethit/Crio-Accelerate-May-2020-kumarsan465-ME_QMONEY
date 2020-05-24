@@ -12,6 +12,20 @@ import org.junit.jupiter.api.Test;
 class PortfolioManagerApplicationTest {
 
   @Test
+  void mainReadFile() throws Exception {
+    //given
+    String filename = "trades.json";
+    List<String> expected = Arrays.asList(new String[]{"AAPL","MSFT","GOOGL"});
+
+    //when
+    List<String> actual = PortfolioManagerApplication
+        .mainReadFile(new String[]{filename});
+
+    //then
+    Assertions.assertEquals(expected, actual);
+  }
+
+  @Test
   void mainReadQuotes() throws Exception {
     //given
     String filename = "trades.json";

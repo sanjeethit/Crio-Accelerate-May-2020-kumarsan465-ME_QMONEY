@@ -2,22 +2,31 @@
 package com.crio.warmup.stock;
 
 import com.crio.warmup.stock.dto.PortfolioTrade;
+import com.crio.warmup.stock.dto.TiingoCandle;
 import com.crio.warmup.stock.log.UncaughtExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.io.File;
 import java.io.IOException;
 
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
+import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.apache.logging.log4j.ThreadContext;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 public class PortfolioManagerApplication {
 
@@ -44,6 +53,28 @@ public class PortfolioManagerApplication {
     for (int i = 0; i < symbol.length;i++) {
       al.add(symbol[i].getSymbol());
     }
+    return al;
+  }
+
+  public static List<String> mainReadQuotes(String[] args) throws IOException,
+      URISyntaxException, RestClientException {
+    File resolveFile = resolveFileFromResources(args[0]);
+    ObjectMapper mapper = getObjectMapper();
+    PortfolioTrade[] res = mapper.readValue(resolveFile, PortfolioTrade[].class);
+    String apiToken = "186c74ef8c388ebccbeb92d69f26265a4f5eb056";
+    RestTemplate restTemplate = new RestTemplate();
+    SortedMap<Double, String> smap = new TreeMap<>();
+    for (int i = 0; i < res.length; i++) {
+      String symbol = res[i].getSymbol();
+      LocalDate startDate = res[i].getPurchaseDate();
+      LocalDate endDate = LocalDate.parse(args[1]);
+      String resreadQuotes = restTemplate.getForObject(
+          "https://api.tiingo.com/tiingo/daily/{symbol}/prices?startDate={sdate}&endDate={edate}&token={token}",
+          String.class, symbol, startDate, endDate, apiToken);
+      TiingoCandle[] readQuotes = mapper.readValue(resreadQuotes, TiingoCandle[].class);
+      smap.put(readQuotes[readQuotes.length - 1].getClose(), res[i].getSymbol());
+    }
+    List<String> al = new ArrayList<>(smap.values());
     return al;
   }
 
@@ -79,6 +110,8 @@ public class PortfolioManagerApplication {
     ThreadContext.put("runId", UUID.randomUUID().toString());
 
     printJsonObject(mainReadFile(args));
+    printJsonObject(mainReadQuotes(args));
+
 
   }
 }
