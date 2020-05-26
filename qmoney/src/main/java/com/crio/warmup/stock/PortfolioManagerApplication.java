@@ -5,7 +5,6 @@ import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
 import com.crio.warmup.stock.dto.TiingoCandle;
 import com.crio.warmup.stock.log.UncaughtExceptionHandler;
-import com.crio.warmup.stock.portfolio.PortfolioManager;
 import com.crio.warmup.stock.portfolio.PortfolioManagerFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -14,12 +13,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
