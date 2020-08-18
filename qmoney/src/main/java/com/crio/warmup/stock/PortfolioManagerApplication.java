@@ -1,4 +1,3 @@
-
 package com.crio.warmup.stock;
 
 import com.crio.warmup.stock.dto.AnnualizedReturn;
@@ -149,6 +148,7 @@ public class PortfolioManagerApplication {
     return Arrays.asList(new String[] { valueOfArgument0, resultOfResolveFilePathArgs0,
       toStringOfObjectMapper, functionStackTrace, lineStackTrace });
   }
+
 
   public static void main(String[] args) throws Exception {
     Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler());
