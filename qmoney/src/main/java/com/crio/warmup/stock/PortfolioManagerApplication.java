@@ -120,7 +120,6 @@ public class PortfolioManagerApplication {
     return PortfolioManagerFactory.getPortfolioManager(restTemplate)
       .calculateAnnualizedReturn(Arrays.asList(portfolioTrades), endDate);
   }
-  
 
   private static void printJsonObject(Object object) throws IOException {
     Logger logger = Logger.getLogger(PortfolioManagerApplication.class.getCanonicalName());
